@@ -320,7 +320,7 @@ func (clt *Client) Call(method string, path string, headers map[string]interface
 			Status:     resp.Status,
 			StatusCode: resp.StatusCode,
 			Header:     resp.Header,
-			Result:     "",
+			Result:     string(responseData),
 		}, nil
 	}
 	output, err := getOutput(params, fileNameKey, responseData, resp.Header.Get("content-type"))
