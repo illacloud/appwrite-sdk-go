@@ -63,7 +63,7 @@ type Client struct {
 // NewClient initializes a new Appwrite client with a given timeout
 func NewClient() Client {
 	headers := map[string]string{
-		"X-Appwrite-Response-Format" : "0.7.0",
+		"X-Appwrite-Response-Format" : "1.2.0",
 		"x-sdk-name": "NAME",
 		"x-sdk-platform": "",
 		"x-sdk-language": "go",
@@ -316,15 +316,11 @@ func (clt *Client) Call(method string, path string, headers map[string]interface
 				message:    message,
 			}
 		}
-		output,  ok := jsonResponse["result"].(string)
-		if !ok {
-			return nil, fmt.Errorf("invalid response type %v", jsonResponse)
-		}
 		return &ClientResponse{
 			Status:     resp.Status,
 			StatusCode: resp.StatusCode,
 			Header:     resp.Header,
-			Result:     string(output),
+			Result:     string(responseData),
 		}, nil
 	}
 	output, err := getOutput(params, fileNameKey, responseData, resp.Header.Get("content-type"))
