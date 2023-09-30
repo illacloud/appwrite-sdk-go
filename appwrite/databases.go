@@ -19,10 +19,10 @@ func NewDatabases(clt Client) *Databases {
 // use the search parameter to filter your results.
 func (srv *Databases) List(Queries []interface{}, Search string) (*ClientResponse, error) {
 	path := "/databases"
-	
+
 	params := map[string]interface{}{
 		"queries": Queries,
-		"search": Search,
+		"search":  Search,
 	}
 
 	headers := map[string]interface{}{
@@ -32,13 +32,12 @@ func (srv *Databases) List(Queries []interface{}, Search string) (*ClientRespons
 }
 
 // Create create a new Database.
-// 
 func (srv *Databases) Create(DatabaseId string, Name string) (*ClientResponse, error) {
 	path := "/databases"
-	
+
 	params := map[string]interface{}{
 		"databaseId": DatabaseId,
-		"name": Name,
+		"name":       Name,
 	}
 
 	headers := map[string]interface{}{
@@ -53,8 +52,7 @@ func (srv *Databases) Get(DatabaseId string) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId)
 	path := r.Replace("/databases/{databaseId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -83,8 +81,7 @@ func (srv *Databases) Delete(DatabaseId string) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId)
 	path := r.Replace("/databases/{databaseId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -94,13 +91,23 @@ func (srv *Databases) Delete(DatabaseId string) (*ClientResponse, error) {
 
 // ListCollections get a list of all collections that belong to the provided
 // databaseId. You can use the search parameter to filter your results.
-func (srv *Databases) ListCollections(DatabaseId string, Queries []interface{}, Search string) (*ClientResponse, error) {
+func (srv *Databases) ListAllCollections(DatabaseId string) (*ClientResponse, error) {
+	r := strings.NewReplacer("{databaseId}", DatabaseId)
+	path := r.Replace("/databases/{databaseId}/collections")
+
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+	return srv.client.Call("GET", path, headers, nil)
+}
+
+func (srv *Databases) SearchCollections(DatabaseId string, Queries []interface{}, Search string) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId)
 	path := r.Replace("/databases/{databaseId}/collections")
 
 	params := map[string]interface{}{
 		"queries": Queries,
-		"search": Search,
+		"search":  Search,
 	}
 
 	headers := map[string]interface{}{
@@ -118,9 +125,9 @@ func (srv *Databases) CreateCollection(DatabaseId string, CollectionId string, N
 	path := r.Replace("/databases/{databaseId}/collections")
 
 	params := map[string]interface{}{
-		"collectionId": CollectionId,
-		"name": Name,
-		"permissions": Permissions,
+		"collectionId":     CollectionId,
+		"name":             Name,
+		"permissions":      Permissions,
 		"documentSecurity": DocumentSecurity,
 	}
 
@@ -136,8 +143,7 @@ func (srv *Databases) GetCollection(DatabaseId string, CollectionId string) (*Cl
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -151,10 +157,10 @@ func (srv *Databases) UpdateCollection(DatabaseId string, CollectionId string, N
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}")
 
 	params := map[string]interface{}{
-		"name": Name,
-		"permissions": Permissions,
+		"name":             Name,
+		"permissions":      Permissions,
 		"documentSecurity": DocumentSecurity,
-		"enabled": Enabled,
+		"enabled":          Enabled,
 	}
 
 	headers := map[string]interface{}{
@@ -169,8 +175,7 @@ func (srv *Databases) DeleteCollection(DatabaseId string, CollectionId string) (
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -183,8 +188,7 @@ func (srv *Databases) ListAttributes(DatabaseId string, CollectionId string) (*C
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -193,16 +197,15 @@ func (srv *Databases) ListAttributes(DatabaseId string, CollectionId string) (*C
 }
 
 // CreateBooleanAttribute create a boolean attribute.
-// 
 func (srv *Databases) CreateBooleanAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Default bool, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/boolean")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -217,10 +220,10 @@ func (srv *Databases) CreateDatetimeAttribute(DatabaseId string, CollectionId st
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/datetime")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -230,16 +233,15 @@ func (srv *Databases) CreateDatetimeAttribute(DatabaseId string, CollectionId st
 }
 
 // CreateEmailAttribute create an email attribute.
-// 
 func (srv *Databases) CreateEmailAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Default string, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/email")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -254,11 +256,11 @@ func (srv *Databases) CreateEnumAttribute(DatabaseId string, CollectionId string
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/enum")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"elements": Elements,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -269,18 +271,17 @@ func (srv *Databases) CreateEnumAttribute(DatabaseId string, CollectionId string
 
 // CreateFloatAttribute create a float attribute. Optionally, minimum and
 // maximum values can be provided.
-// 
 func (srv *Databases) CreateFloatAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Min float64, Max float64, Default float64, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/float")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"min": Min,
-		"max": Max,
-		"default": Default,
-		"array": Array,
+		"min":      Min,
+		"max":      Max,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -291,18 +292,17 @@ func (srv *Databases) CreateFloatAttribute(DatabaseId string, CollectionId strin
 
 // CreateIntegerAttribute create an integer attribute. Optionally, minimum and
 // maximum values can be provided.
-// 
 func (srv *Databases) CreateIntegerAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Min int, Max int, Default int, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/integer")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"min": Min,
-		"max": Max,
-		"default": Default,
-		"array": Array,
+		"min":      Min,
+		"max":      Max,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -312,16 +312,15 @@ func (srv *Databases) CreateIntegerAttribute(DatabaseId string, CollectionId str
 }
 
 // CreateIpAttribute create IP address attribute.
-// 
 func (srv *Databases) CreateIpAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Default string, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/ip")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -331,17 +330,16 @@ func (srv *Databases) CreateIpAttribute(DatabaseId string, CollectionId string, 
 }
 
 // CreateStringAttribute create a string attribute.
-// 
 func (srv *Databases) CreateStringAttribute(DatabaseId string, CollectionId string, Key string, Size int, Required bool, Default string, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/string")
 
 	params := map[string]interface{}{
-		"key": Key,
-		"size": Size,
+		"key":      Key,
+		"size":     Size,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -351,16 +349,15 @@ func (srv *Databases) CreateStringAttribute(DatabaseId string, CollectionId stri
 }
 
 // CreateUrlAttribute create a URL attribute.
-// 
 func (srv *Databases) CreateUrlAttribute(DatabaseId string, CollectionId string, Key string, Required bool, Default string, Array bool) (*ClientResponse, error) {
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/url")
 
 	params := map[string]interface{}{
-		"key": Key,
+		"key":      Key,
 		"required": Required,
-		"default": Default,
-		"array": Array,
+		"default":  Default,
+		"array":    Array,
 	}
 
 	headers := map[string]interface{}{
@@ -374,8 +371,7 @@ func (srv *Databases) GetAttribute(DatabaseId string, CollectionId string, Key s
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{key}", Key)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/{key}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -388,8 +384,7 @@ func (srv *Databases) DeleteAttribute(DatabaseId string, CollectionId string, Ke
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{key}", Key)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/attributes/{key}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -422,8 +417,8 @@ func (srv *Databases) CreateDocument(DatabaseId string, CollectionId string, Doc
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/documents")
 
 	params := map[string]interface{}{
-		"documentId": DocumentId,
-		"data": Data,
+		"documentId":  DocumentId,
+		"data":        Data,
 		"permissions": Permissions,
 	}
 
@@ -439,8 +434,7 @@ func (srv *Databases) GetDocument(DatabaseId string, CollectionId string, Docume
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{documentId}", DocumentId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/documents/{documentId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -455,7 +449,7 @@ func (srv *Databases) UpdateDocument(DatabaseId string, CollectionId string, Doc
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/documents/{documentId}")
 
 	params := map[string]interface{}{
-		"data": Data,
+		"data":        Data,
 		"permissions": Permissions,
 	}
 
@@ -470,8 +464,7 @@ func (srv *Databases) DeleteDocument(DatabaseId string, CollectionId string, Doc
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{documentId}", DocumentId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/documents/{documentId}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -484,8 +477,7 @@ func (srv *Databases) ListIndexes(DatabaseId string, CollectionId string) (*Clie
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/indexes")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -499,10 +491,10 @@ func (srv *Databases) CreateIndex(DatabaseId string, CollectionId string, Key st
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/indexes")
 
 	params := map[string]interface{}{
-		"key": Key,
-		"type": Type,
+		"key":        Key,
+		"type":       Type,
 		"attributes": Attributes,
-		"orders": Orders,
+		"orders":     Orders,
 	}
 
 	headers := map[string]interface{}{
@@ -516,8 +508,7 @@ func (srv *Databases) GetIndex(DatabaseId string, CollectionId string, Key strin
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{key}", Key)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/indexes/{key}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -530,8 +521,7 @@ func (srv *Databases) DeleteIndex(DatabaseId string, CollectionId string, Key st
 	r := strings.NewReplacer("{databaseId}", DatabaseId, "{collectionId}", CollectionId, "{key}", Key)
 	path := r.Replace("/databases/{databaseId}/collections/{collectionId}/indexes/{key}")
 
-	params := map[string]interface{}{
-	}
+	params := map[string]interface{}{}
 
 	headers := map[string]interface{}{
 		"content-type": "application/json",
