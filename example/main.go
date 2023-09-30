@@ -23,14 +23,11 @@ func main() {
 	client.SetKey(os.Getenv("YOUR_KEY"))
 	client.SetTimeout(10 * time.Second)
 
-	db := appwrite.NewDatabase(client)
-	data := map[string]string{
-		"hello": "world",
-	}
+	db := appwrite.NewDatabases(client)
 	doc, err := db.CreateDocument(
 		os.Getenv("COLLECTION_ID"),
 		EmptyParentDocument,
-		data,
+		"test data",
 		EmptyArray,
 		EmptyArray,
 	)
